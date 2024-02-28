@@ -1,5 +1,6 @@
 import express , {Request,Response}from 'express';
 import cors from 'cors';
+import myUserRoute from "./routes/MyUserRoute"; 
 const dotenv= require('dotenv');
 dotenv.config()
 const connectToDataBase = require('../db/database')
@@ -21,14 +22,13 @@ app.use(express.json());
 app.use(cors(corsOpts));
 
 
+app.use("/api/my/user",myUserRoute)
 
-app.get('/test',async(req:Request,res:Response) => {
-  res.json({message:'hello krish'})
-})
 connectToDataBase();
-
 app.listen(3000,() => {
   console.log("server started on localhost:3000")
 })
+
+
 
 
