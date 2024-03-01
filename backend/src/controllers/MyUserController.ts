@@ -17,8 +17,6 @@ const createCurrentUser = async (req:Request,res:Response) => {
     console.log(error)
     res.status(500).send({message:'something wrong'})
   }
-
-
 }
 
 export default {
