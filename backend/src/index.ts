@@ -19,7 +19,7 @@ const corsOpts = {
 };
 const app = express();
 app.use(express.json());
-app.use(cors(corsOpts));
+app.use(cors());
 
 
 app.use("/api/my/user",myUserRoute)

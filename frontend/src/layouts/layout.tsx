@@ -3,13 +3,14 @@ import Header from '@/components/Header';
 import Hero from '@/components/Hero';
 import React from 'react';
 type LayoutProps = {
-  children:React.ReactNode
+  children:React.ReactNode,
+  showHero?:boolean
 }
-function Layout({children}:LayoutProps){
+function Layout({children,showHero=false}:LayoutProps){
   return (
   <div className="flex flex-col min-h-screen">
     <Header />
-    <Hero/>
+    {showHero && <Hero/>}
     <div className="container mx-auto flex-1 py-5">{children}</div>
     <Footer/>
   </div>)
