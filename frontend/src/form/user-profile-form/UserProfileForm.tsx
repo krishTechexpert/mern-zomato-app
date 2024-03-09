@@ -2,8 +2,9 @@ import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { UserProps } from '@/types';
 import { zodResolver } from '@hookform/resolvers/zod';
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from "zod";
 
@@ -18,28 +19,33 @@ const formSchema = z.object({
 type UserFormData = z.infer<typeof formSchema>
 
 type Props = {
+  currentUser:UserProps,
   onSave: (userProfileData: UserFormData) => void,
-  isLoading: boolean
+  isLoading: boolean  
 }
 
-export default function UserProfileForm({ onSave, isLoading }: Props) {
-  console.log("isloading=",isLoading)
+export default function UserProfileForm({ onSave, isLoading,currentUser }: Props) {
   const form = useForm<UserFormData>({
-    resolver: zodResolver(formSchema)
-    // defaultValues: {
-    //   name: "",
-    //   email: "",
-    //   addressLine1: "",
-    //   city: "",
-    //   country: ""
-    // },
+    resolver: zodResolver(formSchema),
+    defaultValues:currentUser
   })
+  
+
+  useEffect(() => {
+   form.reset(currentUser)
+  },[currentUser,form])
+
+  // current user dependecy array
+  //jab hum ek page s dosry page per navigate krogy toh UserProfilePage component re-render hga and get the currrent user from api. and put current user in form field using form.reset()
+
+  // form dependency array
+  // jab bi form ki value change krogy toh userprofileForm component re-render hoga and form ki value ko update ker dega
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSave)} className='space-x-4 space-y-4 bg-gray-50 rounded-lg md-p-10'>
         <div className="p-4">
-          <h2 className='text-2xl font-bold'>User Profile Form</h2>
+          <h2 className='text-2xl font-bold'>Hi, {form.getValues("name")} </h2>
           <FormDescription>
             view and change your profile information here
           </FormDescription>

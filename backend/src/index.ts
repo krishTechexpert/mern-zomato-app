@@ -7,10 +7,11 @@ const connectToDataBase = require('../db/database')
 
 const corsOpts = {
   origin: '*',
-
-  methods: [
+    methods: [
     'GET',
     'POST',
+    'PUT',
+    'DELETE'
   ],
 
   allowedHeaders: [
@@ -19,7 +20,9 @@ const corsOpts = {
 };
 const app = express();
 app.use(express.json());
-app.use(cors());
+app.use(cors({
+  origin: '*',
+}));
 
 
 app.use("/api/my/user",myUserRoute)
