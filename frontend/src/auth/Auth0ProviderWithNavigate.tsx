@@ -19,7 +19,8 @@ export default function Auth0ProviderWithNavigate({children}:authProps) {
     navigate('/auth-callback')
   }
   return (
-    <Auth0Provider domain={domain} clientId={clientId} authorizationParams={{redirect_uri:redirectUri,audience:audience}} onRedirectCallback={onRedirectCallback}>
+    <Auth0Provider domain={domain} clientId={clientId} authorizationParams={{redirect_uri:redirectUri,audience:audience}} onRedirectCallback={onRedirectCallback} useRefreshTokens={true}  
+    cacheLocation="localstorage">
       {children}
     </Auth0Provider>
   )

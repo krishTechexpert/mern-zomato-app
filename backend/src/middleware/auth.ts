@@ -32,7 +32,6 @@ export const jwtParse = async (req:Request,res:Response,next:NextFunction) => {
     if(!user){
       return res.sendStatus(401)
     }
-    console.log("user parsed token",user)
     req.auth0Id=auth0Id as string;
     req.userId=user._id.toString();
     next();
