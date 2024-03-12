@@ -1,11 +1,9 @@
 import { useGetMyUser, useUpdateUserProfile } from '@/api/MyUserApi';
 import UserProfileForm from '@/form/user-profile-form/UserProfileForm'
-import React,{useEffect,useState} from 'react';
 
 export default function UserProfilePage() {
   const {currentUser,isLoading:isGetLoading} = useGetMyUser();
-  let {isLoading:isUpdateLoading,updateMyProfile,isSuccess} = useUpdateUserProfile();
-  const [updationDone,setUpdationDone]=useState(false)
+  let {isLoading:isUpdateLoading,updateMyProfile} = useUpdateUserProfile();
   if(isGetLoading){
     return <span>Loading...</span>
   }

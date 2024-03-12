@@ -35,10 +35,10 @@ export default function UserProfileForm({ onSave, isLoading,currentUser }: Props
    form.reset(currentUser)
   },[currentUser,form])
 
-  // current user dependecy array
+  //1.) current user dependecy array
   //jab hum ek page s dosry page per navigate krogy toh UserProfilePage component re-render hga and get the currrent user from api. and put current user in form field using form.reset()
 
-  // form dependency array
+  //2.) form dependency array
   // jab bi form ki value change krogy toh userprofileForm component re-render hoga and form ki value ko update ker dega
 
   return (
