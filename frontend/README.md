@@ -20,3 +20,5 @@ REST Api
 express-oauth2-jwt-bearer: Validate auth0 token
 jsonwebtoken
 express validator
+cloudinary
+multer
