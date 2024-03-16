@@ -15,6 +15,9 @@ export default function UserNameMenu() {
   </DropdownMenuTrigger>
   <DropdownMenuContent>
     <DropdownMenuItem>
+    <Link to="/manage-restaurant" className='font-bold text-orange-500'>My Restaurant</Link>
+    </DropdownMenuItem>
+    <DropdownMenuItem>
     <Link to="/user-profile" className='font-bold text-orange-500'>My Profile</Link>
     </DropdownMenuItem>
     <Separator/>

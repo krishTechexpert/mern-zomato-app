@@ -13,12 +13,14 @@ declare global{
     }
   }
 }
+// validate token
 export const jwtCheck = auth({
   audience: 'zomato-food-ordering-app-api',
   issuerBaseURL: 'https://dev-uu4llwa41y0tqqnj.us.auth0.com/',
   tokenSigningAlg: 'RS256'
 });
 
+// check token is valid or not
 export const jwtParse = async (req:Request,res:Response,next:NextFunction) => {
   const {authorization} = req.headers;
   if(!authorization || !authorization.startsWith('Bearer ')){
