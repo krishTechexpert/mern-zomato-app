@@ -6,6 +6,9 @@ import DetailsSection from './DetailsSection';
 import { Separator } from '@/components/ui/separator';
 import CuisinesSection from './CuisinesSection';
 import MenuSection from './MenuSection';
+import ImageSection from './ImageSection';
+import LoadingButton from '@/components/LoadingButton';
+import { Button } from '@/components/ui/button';
 
 const formSchema = z.object({
   restaurantName: z.string({required_error:"rastaurant name is required"}),
@@ -26,7 +29,7 @@ const formSchema = z.object({
     name:z.string().min(1,"name is required"),
     price:z.coerce.number().min(1,"price is required")
   })),
-  imageUrl:z.instanceof(File,{message:"url is required"})
+  imageUrl:z.instanceof(File,{message:"image is required"})
 })
 
 type restaurantFormData=z.infer<typeof formSchema>
@@ -38,6 +41,8 @@ type RestaurantProps = {
 
 function ManageRestaurantForm({onSave,isLoading}:RestaurantProps) {
   //here form: all the useForm return props
+  // try to used only one useform hook 
+  // nested component [such as cuisineSection,MenuSection below etc] k liye humko {control}=useFormcontext used kerna hoga who can retrive all methods
   const form = useForm<restaurantFormData>({
     resolver:zodResolver(formSchema),
     defaultValues:{
@@ -48,6 +53,7 @@ function ManageRestaurantForm({onSave,isLoading}:RestaurantProps) {
 
   const onSubmit=(formDataJson:restaurantFormData) => {
     //TODO - convert formDataJson to a new formData Object
+    console.log("my form",formDataJson)
   }
 
   return (
@@ -58,6 +64,9 @@ function ManageRestaurantForm({onSave,isLoading}:RestaurantProps) {
         <CuisinesSection/>
         <Separator/>
         <MenuSection/>
+        <Separator/>
+        <ImageSection/>
+        {isLoading? <LoadingButton/> : <Button type="submit">Submit</Button>}
       </form>
     </Form>
     )

@@ -5,14 +5,14 @@ import MenuItemInput from './MenuItemInput';
 
 export default function MenuSection() {
   const {control} = useFormContext();
-  //here fields contains Array which has [{name:'',price:}]
+  //here below fields contains Array which has [{name:'',price:0}] default value hai
   // append -> add menu item in fields array
   // remove -> remove menu item in fields array
+  // useField Array is used here to make input dynamic [onclick add new input]
   const{fields,append,remove}=useFieldArray({
     control,
     name:"menuItems"
   })
-  console.log("menu items",fields)
   return (
     <div className='space-y-2'>
       <div className='pb-6'>
@@ -32,7 +32,6 @@ export default function MenuSection() {
             <MenuItemInput index={index} removeMenuItem={() => remove(index)} />
           ))}
         </div>
-        <FormMessage/>
       </FormItem>
       )} />
       <Button type="button" onClick={() => append({name:'',price:''})}>Add Menu Item</Button>

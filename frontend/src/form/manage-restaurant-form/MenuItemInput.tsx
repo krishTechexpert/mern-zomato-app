@@ -14,7 +14,7 @@ export default function MenuItemInput({index,removeMenuItem}:Props) {
   const {control} =useFormContext();
   return (
     <div className='flex flex-row items-end gap-2'>
-      <FormField control={control} name={`menuItems.${index}.name`} 
+      <FormField control={control} name={`menuItems.${index}.name`} // here to make name is unique
         render={({field}) => (
           <FormItem>
             <FormLabel className='flex items-center gap-1'>
