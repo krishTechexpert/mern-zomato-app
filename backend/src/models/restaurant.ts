@@ -18,11 +18,11 @@ const restaurantSchema = new mongoose.Schema({
   },
   city:{type:String,required:true},
   country:{type:String,required:true},
-  deliveryPrice:{type:Number,required:true},
+  deliveryPrice:{type:mongoose.Types.Decimal128,required:true}, // price is in decimal point
   estimatedDeliveryTime:{type:Number,required:true}, // in seconds
   cuisines:[{type:String,required:true}], // this restaurent serve international cuisine [bojan,khana]
   menuItems:[menuItemSchema],
-  imageUrl:{type:String,required:true},
+  imageFile:{type:String,required:true},
   lastUpdated:{type:Date,required:true},
   createdAt:{type:Date,default:Date.now}
 })

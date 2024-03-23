@@ -14,10 +14,14 @@ const upload = multer({
   }
  })
 
-// req.file is the `imageUrl` file
+// req.file is the `imageFile` file
 
-// /api/my/restaurant
+//GET:  /api/my/restaurant
 
-router.post('/',upload.single('imageUrl'),validateMyRestaurantRequest,jwtCheck,jwtParse,MyRestaurantController.createMyRestaurant)
+router.get('/',jwtCheck,jwtParse,MyRestaurantController.getMyRestaurant)
+
+//POST:  /api/my/restaurant
+
+router.post('/',upload.single('imageFile'),validateMyRestaurantRequest,jwtCheck,jwtParse,MyRestaurantController.createMyRestaurant)
 
 export default router;
