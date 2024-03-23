@@ -13,7 +13,7 @@ export default function ImageSection() {
         </FormDescription>
       </div>
       <div className='flex flex-col gap-8 w-[50%]'>
-          <FormField control={control} name="imageUrl" render={({field}) => (
+          <FormField control={control} name="imageFile" render={({field}) => (
             <FormItem>
               <FormControl>
                 <Input className='bg-white' type='file' accept='.jpg,.png,.jpeg'

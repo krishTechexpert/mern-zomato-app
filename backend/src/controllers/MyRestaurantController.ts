@@ -12,14 +12,13 @@ const createMyRestaurant = async (req:Request,res:Response) => {
         return res.status(409).json({message:'User restaurant already exists'})
       } 
 
-      const image = req.file as Express.Multer.File;
+      let image = req.file as Express.Multer.File;
       const base64Image= Buffer.from(image.buffer).toString("base64");
-      const dataURI = `data:${image.mimetype};base64,${base64Image}`;
-
+      let dataURI = `data:${image.mimetype};base64,${base64Image}`;
       const uploadResponse = await cloudinary.v2.uploader.upload(dataURI)
 
       const newRestaurant =  new Restaurant(req.body);
-      newRestaurant.imageUrl = uploadResponse.url;
+      newRestaurant.imageFile = uploadResponse.url;
       newRestaurant.user = new mongoose.Types.ObjectId(req.userId);
       newRestaurant.lastUpdated=new Date()
       await newRestaurant.save();
@@ -28,13 +27,27 @@ const createMyRestaurant = async (req:Request,res:Response) => {
 
   }catch(error){
     console.log(error)
-    res.status(500).json({message:'failed to create new Restaurent'})
+    return res.status(500).send({message:'failed to create new Restaurent'})
   }
+}
 
+const getMyRestaurant = async (req:Request,res:Response) => {
+  try{
+    const existingRestaurant = await Restaurant.findOne({user:req.userId});
+    if(!existingRestaurant){
+      return res.status(404).send({message:'Restaurant not found'})
+    } 
 
+    return res.status(200).send(existingRestaurant)
+
+}catch(error){
+  console.log(error)
+  return res.status(500).send({message:'Failed to fetching Restaurent'})
+}
 }
 
 
 export default {
-  createMyRestaurant
+  createMyRestaurant,
+  getMyRestaurant
 }
