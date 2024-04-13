@@ -24,4 +24,9 @@ router.get('/',jwtCheck,jwtParse,MyRestaurantController.getMyRestaurant)
 
 router.post('/',upload.single('imageFile'),validateMyRestaurantRequest,jwtCheck,jwtParse,MyRestaurantController.createMyRestaurant)
 
+
+//PUT:  /api/my/restaurant
+
+router.put('/',upload.single('imageFile'),validateMyRestaurantRequest,jwtCheck,jwtParse,MyRestaurantController.updateMyRestaurant)
+
 export default router;
