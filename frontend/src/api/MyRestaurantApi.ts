@@ -1,6 +1,6 @@
 import { Restaurant } from "@/types";
 import { useAuth0 } from "@auth0/auth0-react";
-import { useMutation } from "react-query";
+import { useMutation, useQuery } from "react-query";
 import { toast } from "sonner";
 
 const API_BASE_URL=import.meta.env.VITE_API_BASE_URL;
@@ -45,5 +45,84 @@ export const useCreateMyRestaurant = () => {
     return {
       isLoading,createRestaurant
     }
+
+}
+
+export const usegetMyRestaurant = () => {
+  const {getAccessTokenSilently} = useAuth0();
+
+  const getMyRestaurantRequest = async():Promise<Restaurant> => {
+      
+    const accessToken = await getAccessTokenSilently();
+      
+      const response = await fetch(`${API_BASE_URL}/api/my/restaurant`,{
+            method:'GET',
+            headers:{
+              Authorization:`Bearer ${accessToken}`
+            }
+      })
+      const result = await response.json();
+      // show error
+      if(result.message){
+        throw new Error(result.message)
+      }
+      return result;
+
+
+  }
+
+  // react query (useQuery) for fetching
+  const {data:restaurant,isLoading,error}=useQuery("fetchMyRestaurant",getMyRestaurantRequest);
+  
+  if(error){
+    toast.error(error.toString())
+  }
+
+    return {
+      isLoading,restaurant
+    }
+
+}
+
+export const useUpdateMyRestaurant = () => {
+  const {getAccessTokenSilently} = useAuth0();
+
+  const updateRestaurantRequest = async(restaurantFormData:FormData):Promise<Restaurant> => {
+
+    const accessToken = await getAccessTokenSilently();
+      
+      const response = await fetch(`${API_BASE_URL}/api/my/restaurant`,{
+            method:'PUT',
+            headers:{
+              Authorization:`Bearer ${accessToken}`
+            },
+            body:restaurantFormData
+      })
+      if(!response){
+        throw new Error('Failed to update Restaurant')
+      }
+      const result = await response.json();
+      // show error
+      if(result.message){
+        throw new Error(result.message)
+      }
+      return result;
+
+  }
+
+  const {mutate:updateRestaurant,isLoading,error,isSuccess}=useMutation(updateRestaurantRequest);
+  
+  if(error){
+    toast.error(error.toString())
+  }
+
+  if(isSuccess){
+    toast.success('Restaurant updated successfully')
+  }
+  
+    return {
+      isLoading,updateRestaurant
+    }
+
 
 }

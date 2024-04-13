@@ -9,6 +9,10 @@ import MenuSection from './MenuSection';
 import ImageSection from './ImageSection';
 import LoadingButton from '@/components/LoadingButton';
 import { Button } from '@/components/ui/button';
+import { Restaurant } from "@/types";
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+
 
 const formSchema = z.object({
   restaurantName: z.string({ required_error: "rastaurant name is required" }),
@@ -29,17 +33,23 @@ const formSchema = z.object({
     name: z.string().min(1, "name is required"),
     price: z.coerce.number().min(1, "price is required")
   })),
-  imageFile: z.instanceof(File, { message: "image is required" })
+  imageUrl:z.string().optional(),
+  imageFile: z.instanceof(File, { message: "image is required" }).optional()
+}).refine((data)=> data.imageFile || data.imageUrl,{
+    message:"Either image Url or image File must be provided",
+    path:["imageFile"]
 })
 
 type RestaurantFormData = z.infer<typeof formSchema>
 
 type RestaurantProps = {
+  restaurant?:Restaurant,
   onSave: (restaurantFormData: FormData) => void;
   isLoading: boolean;
 }
 
-function ManageRestaurantForm({ onSave, isLoading }: RestaurantProps) {
+function ManageRestaurantForm({ onSave, isLoading,restaurant }: RestaurantProps) {
+  const navigate=useNavigate();
   //here form: all the useForm return props
   // try to used only one useform hook 
   // nested component [such as cuisineSection,MenuSection below etc] k liye humko {control}=useFormcontext used kerna hoga who can retrive all methods
@@ -51,6 +61,13 @@ function ManageRestaurantForm({ onSave, isLoading }: RestaurantProps) {
     }
   })
 
+  useEffect(() => {
+    if(!restaurant){
+      return;
+    }    
+    form.reset(restaurant)
+  },[form,restaurant])
+
   const onSubmit = (formDataJson: RestaurantFormData) => {
     const formData = new FormData();
     formData.append("restaurantName", formDataJson.restaurantName)
@@ -61,7 +78,7 @@ function ManageRestaurantForm({ onSave, isLoading }: RestaurantProps) {
     //1GBP=100pence
     //1.5GBP= 150 pence < lowest denomintaion
 
-    formData.append("deliveryPrice",formDataJson.deliveryPrice.toFixed(2).toString()) // 50.00
+    formData.append("deliveryPrice",formDataJson.deliveryPrice.toString()) // 50.00
     formData.append("estimatedDeliveryTime",formDataJson.estimatedDeliveryTime.toString())
 
     formDataJson.cuisines.map((cuisine,index) => {
@@ -70,12 +87,13 @@ function ManageRestaurantForm({ onSave, isLoading }: RestaurantProps) {
 
     formDataJson.menuItems.map((menuItem,index) => {
       formData.append(`menuItems[${index}][name]`,menuItem.name)
-      formData.append(`menuItems[${index}][price]`,menuItem.price.toFixed(2).toString())
+      formData.append(`menuItems[${index}][price]`,menuItem.price.toString())
     })
-
-    formData.append("imageFile",formDataJson.imageFile)
-    //console.log(formData)
+    if(formDataJson.imageFile){
+      formData.append("imageFile",formDataJson.imageFile)
+    }
     onSave(formData)
+    navigate('/manage-restaurant')
 
   }
 

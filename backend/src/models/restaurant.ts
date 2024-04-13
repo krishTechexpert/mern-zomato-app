@@ -18,7 +18,7 @@ const restaurantSchema = new mongoose.Schema({
   },
   city:{type:String,required:true},
   country:{type:String,required:true},
-  deliveryPrice:{type:mongoose.Types.Decimal128,required:true}, // price is in decimal point
+  deliveryPrice:{type:Number,required:true}, // price should be in decimal format..do some RND on this
   estimatedDeliveryTime:{type:Number,required:true}, // in seconds
   cuisines:[{type:String,required:true}], // this restaurent serve international cuisine [bojan,khana]
   menuItems:[menuItemSchema],
