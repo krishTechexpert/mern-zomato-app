@@ -29,3 +29,12 @@ export type Restaurant={
   imageFile:string,
   lastUpdated:string
 }
+
+export type RestaurantSearchResponse = {
+  data:Restaurant[],
+  pagination:{
+    total:number,
+    pages:number,
+    currentPage:number
+  }
+}

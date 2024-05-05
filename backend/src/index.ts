@@ -3,6 +3,7 @@ import cors from 'cors';
 import myUserRoute from "./routes/MyUserRoute"; 
 import {v2 as cloudinary } from "cloudinary";
 import MyRestaurantRoute from './routes/MyRestaurantRoute';
+import RestaurantRoute from "./routes/RestaurantRoute";
 const dotenv= require('dotenv').config()
 const connectToDataBase = require('../db/database')
 
@@ -28,7 +29,7 @@ app.use(cors({
 
 app.use("/api/my/user",myUserRoute)
 app.use("/api/my/restaurant",MyRestaurantRoute)
-
+app.use("/api/restaurant",RestaurantRoute)
 
 
 app.get('/test',(req:Request,res:Response) => {
