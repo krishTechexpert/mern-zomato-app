@@ -33,7 +33,7 @@ app.use("/api/restaurant",RestaurantRoute)
 
 
 app.get('/test',(req:Request,res:Response) => {
-res.send({message:'api end points tested '})
+res.send({message:'backend api end points tested on port such as http://localhost:3000/test '})
 })
 
 connectToDataBase();

@@ -20,3 +20,9 @@ REST Api
 express-oauth2-jwt-bearer: Validate auth0 token
 jsonwebtoken
 express validator
+
+
+keyPoints:
+
+backend/tsconfig.json
+"outDir": "./build", contains our build code
