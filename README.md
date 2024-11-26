@@ -16,6 +16,7 @@ Backend:
 npm i express cors dotenv mongodb mongoose
 npm i ts-node typescript nodemon @types/express @types/cors @types/node --save-dev
 npx tsc --init create tsconfig.json file
+
 nodeJs
 Express
 mongodb
@@ -29,3 +30,6 @@ keyPoints:
 
 backend/tsconfig.json
 "outDir": "./build", contains our build code
+
+test backend api on Render
+https://mern-zomato-app-backend-api.onrender.com/test

@@ -31,9 +31,9 @@ app.use("/api/my/user",myUserRoute)
 app.use("/api/my/restaurant",MyRestaurantRoute)
 app.use("/api/restaurant",RestaurantRoute)
 
-
+// test backend api
 app.get('/test',(req:Request,res:Response) => {
-res.send({message:'backend api end points tested on port such as http://localhost:3000/test '})
+res.send({message:'backend api end points tested on port such as http://localhost:3000/test on local as well as https://mern-zomato-app-backend-api.onrender.com/test'})
 })
 
 connectToDataBase();
