@@ -1,12 +1,12 @@
 {
   "name": "backend",
   "version": "1.0.0",
-  "description": "",
+  "description": "food order app backend part",
   "main": "./src/index.ts",
   "scripts": {
     "dev": "nodemon",
     "build": "npm install && npx tsc",
-    "prod": "node build/src/index.js"
+    "start": "node build/src/index.js"
   },
   "keywords": [],
   "author": "",
