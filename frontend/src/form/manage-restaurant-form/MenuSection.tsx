@@ -29,7 +29,7 @@ export default function MenuSection() {
            * _underscore: value is not used but since we need the index so we have to specify this like below(_,index)
            */}
           {fields.map((_,index) => (
-            <MenuItemInput index={index} removeMenuItem={() => remove(index)} />
+            <MenuItemInput key={index} index={index} removeMenuItem={() => remove(index)} />
           ))}
         </div>
       </FormItem>

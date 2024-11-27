@@ -22,7 +22,7 @@ function PaginationPage({page,pages,onPageChange}:Props) {
         }
         {pageNumbers && pageNumbers.map(number => (
             <PaginationItem>
-              <PaginationLink href="#" onClick={() =>onPageChange(number)} isActive={page === number}>
+              <PaginationLink key={number} href="#" onClick={() =>onPageChange(number)} isActive={page === number}>
                 {number}
               </PaginationLink>
           </PaginationItem>

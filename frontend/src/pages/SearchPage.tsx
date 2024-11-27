@@ -5,7 +5,7 @@ import SearchBar, { SearchForm } from '@/components/SearchBar';
 import SearchResultCard from '@/components/SearchResultCard';
 import SearchResultInfo from '@/components/SearchResultInfo';
 import SortOptionDropdown from '@/components/SortOptionDropdown';
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useParams } from 'react-router-dom'
 
 export type searchState = {
@@ -68,7 +68,7 @@ export default function SearchPage() {
   }
 
   if(isLoading){
-    <span>loading...</span>
+    return <span>loading...</span>
   }
   if(!results?.data || !city){
     return <span>No result found</span>
