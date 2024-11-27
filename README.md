@@ -33,3 +33,6 @@ backend/tsconfig.json
 
 test backend api on Render
 https://mern-zomato-app-backend-api.onrender.com/test
+
+Frontend live:
+https://mern-zomato-food-ordering-app-frontend.onrender.com/
