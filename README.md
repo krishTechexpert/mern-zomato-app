@@ -23,7 +23,8 @@ mongodb
 REST Api
 express-oauth2-jwt-bearer: Validate auth0 token
 jsonwebtoken
-express validator
+express validator: a popular library for validating and sanitizing input in Express apps.
+
 
 
 keyPoints:

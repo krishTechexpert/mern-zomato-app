@@ -33,7 +33,8 @@ const serchRestaurants = async(req:Request,res:Response) => {
     if(selectedCuisines){
       // URl = selectedCuisines=pizza,burger,pasta
     const cuisineArray = selectedCuisines.split(",").map((cuisine) => new RegExp(cuisine,"i"));
-      query["cuisines"]= {$all:cuisineArray}
+      query["cuisines"]= {$all:cuisineArray} // Use $all when all patterns must match.
+      //{ cuisines: { $all: [/pizza/i, /burger/i, /pasta/i] } }
     }
 
     if(searchQuery){
@@ -75,6 +76,23 @@ const serchRestaurants = async(req:Request,res:Response) => {
     return res.status(500).json({message:'Something went to wrong for search'})
   }
 }
+
+const getRestaurant = async(req:Request,res:Response) => {
+  try{
+    const {restaurantId} = req.params;
+    const restaurant = await Restaurant.findById(restaurantId);
+    if(!restaurant){
+      return res.status(404).json({message:'Restaurant not found'})
+    }
+     res.status(200).json(restaurant)
+
+  }catch(error){
+    console.log(error);
+    return res.status(500).json({message:'Something went to wrong for restaurant details'})
+  }
+}
+
 export  default{
-  serchRestaurants
+  serchRestaurants,
+  getRestaurant
 }
