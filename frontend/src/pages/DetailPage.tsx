@@ -4,6 +4,7 @@ import MenuItem from '@/components/MenuItem';
 import OrderSummary from '@/components/OrderSummary';
 import RestaurantInfo from '@/components/RestaurantInfo';
 import { Card, CardFooter } from '@/components/ui/card';
+import { UserFormData } from '@/form/user-profile-form/UserProfileForm';
 import { MenuItem as MenuItemType} from '@/types';
 import { AspectRatio } from '@radix-ui/react-aspect-ratio';
 import React, { useState } from 'react'
@@ -57,6 +58,9 @@ export default function DetailPage() {
 
   }
 
+  const onCheckout = (userFormData: UserFormData) => {
+      console.log("user form data",userFormData)
+  }
 
   if(isLoading) return "Loading...";
   if(!restaurant) return <div>No Restaurant Found</div>
@@ -69,15 +73,16 @@ export default function DetailPage() {
           <div className='flex flex-col gap-4'>
               <RestaurantInfo restaurant={restaurant} />
               <span className='text-2xl font-bold tracking-tight'>Menu</span>
-              {restaurant.menuItems.map((menuItem) => (
-                <MenuItem menuItem={menuItem} addToCart={() => addToCart(menuItem)} />
+              {restaurant.menuItems.map((menuItem,index) => (
+                <MenuItem key={index} menuItem={menuItem} addToCart={() => addToCart(menuItem)} />
               ))}
           </div>
+          
           <div>
             <Card>
               <OrderSummary restaurant={restaurant} cartItems={cartItems} removeFromCart={ removeFromCart} />
               <CardFooter>
-                <CheckoutButton />
+                <CheckoutButton disabled={cartItems.length === 0} onCheckout={onCheckout} />
               </CardFooter>
             </Card>
           </div>
