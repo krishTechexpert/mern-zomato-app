@@ -10,10 +10,11 @@ import UserProfileForm, { UserFormData } from '@/form/user-profile-form/UserProf
 type Props = {
   onCheckout:(userFormData:UserFormData) => void;
   disabled:boolean;
+  isLoading:boolean;
 }
 
 
-export default function CheckoutButton({onCheckout,disabled}:Props) {
+export default function CheckoutButton({onCheckout,disabled,isLoading}:Props) {
   const {isAuthenticated,isLoading:isAuthLoading,loginWithRedirect} = useAuth0();
   const { pathname } = useLocation(); // Get the current route
   
@@ -31,7 +32,7 @@ export default function CheckoutButton({onCheckout,disabled}:Props) {
     return <Button onClick={onLogin} className='bg-orange-500 flex-1'>Log into checkout</Button>
   }
 
-  if(isAuthLoading || !currentUser) {
+  if(isAuthLoading || !currentUser || isLoading) {
     return <LoadingButton/>
   }
 

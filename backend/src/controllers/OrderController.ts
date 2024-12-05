@@ -6,6 +6,10 @@ import { check } from "express-validator";
 const STRIPE = new Stripe(process.env.STRIPE_API_KEY as string);
 const FRONTEND_URL = process.env.FRONTEND_URL as string;
 
+if (!STRIPE) {
+  throw new Error("Stripe API key is not defined in the environment variables.");
+}
+
 type CheckoutSessionRequest = {
   cartItems:{
     menuItemId:string,
@@ -30,9 +34,14 @@ const createCheckoutSession = async (req:Request,res:Response) => {
     }
 
     // for stripe page show this information
-    const lineItems = createLineItems(checkoutSessionRequest,restaurant.menuItems);
+    const lineItems =  createLineItems(checkoutSessionRequest,restaurant.menuItems);
+    // sent data to stripe
+    const session = await createSession(lineItems,"TEST_ORDER_ID",restaurant.deliveryPrice,restaurant._id.toString())
 
-
+    if(!session.url){
+      return res.status(500).json({message:'Error creating stripe  session'})
+    }
+    res.json({url: session.url})
   }catch(error:any){
     console.log(error)
     res.status(500).json({message:error.raw.message})
@@ -55,7 +64,7 @@ const createLineItems = (checkoutSessionRequest:CheckoutSessionRequest,menuItems
       // this is pre defined object in stripe we have to used these propeties for stripe
       const line_item:Stripe.Checkout.SessionCreateParams.LineItem ={
         price_data:{
-          currency:"INR",
+          currency:"inr",
           unit_amount: menuItem.price,
           product_data:{
             name:menuItem.name
@@ -65,6 +74,32 @@ const createLineItems = (checkoutSessionRequest:CheckoutSessionRequest,menuItems
       }
       return line_item
   })
+
+  return lineItems;
+}
+
+const createSession = async (lineItems:Stripe.Checkout.SessionCreateParams.LineItem[],orderId:string,deliveryPrice:number,restaurantId:string) => {
+  const sessionData = await STRIPE.checkout.sessions.create({
+    line_items:lineItems,
+    shipping_options:[{
+        shipping_rate_data:{
+          display_name:"Delivery",
+          type:"fixed_amount",
+          fixed_amount:{
+            amount:deliveryPrice,
+            currency:"inr"
+          }
+        }
+      }],
+      mode:'payment',
+      metadata:{
+        orderId,
+        restaurantId
+      },
+      success_url:`${FRONTEND_URL}/order-status?success=true`,
+      cancel_url:`${FRONTEND_URL}/details/${restaurantId}?cancelled=true`
+  })
+  return sessionData;
 }
 
 export default {

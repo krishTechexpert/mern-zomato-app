@@ -1,10 +1,11 @@
 import express , {Request,Response}from 'express';
+const dotenv= require('dotenv').config()
 import cors from 'cors';
 import myUserRoute from "./routes/MyUserRoute"; 
 import {v2 as cloudinary } from "cloudinary";
 import MyRestaurantRoute from './routes/MyRestaurantRoute';
 import RestaurantRoute from "./routes/RestaurantRoute";
-const dotenv= require('dotenv').config()
+import OrderRoute from "./routes/OrderRoute"
 const connectToDataBase = require('../db/database')
 
 const corsOpts = {
@@ -30,6 +31,7 @@ app.use(cors({
 app.use("/api/my/user",myUserRoute)
 app.use("/api/my/restaurant",MyRestaurantRoute)
 app.use("/api/restaurant",RestaurantRoute)
+app.use("/api/order",OrderRoute)
 
 // test backend api
 app.get('/test',(req:Request,res:Response) => {
