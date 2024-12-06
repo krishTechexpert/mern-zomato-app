@@ -2,6 +2,7 @@ import Stripe from "stripe";
 import { Request,Response } from "express";
 import Restaurant, { MenuItemType } from "../models/restaurant";
 import { check } from "express-validator";
+import Order from "../models/order";
 
 const STRIPE = new Stripe(process.env.STRIPE_API_KEY as string);
 const FRONTEND_URL = process.env.FRONTEND_URL as string;
@@ -33,14 +34,26 @@ const createCheckoutSession = async (req:Request,res:Response) => {
       throw new Error("Restaurant Not Found")
     }
 
+    const newOrder = new Order({
+      restaurant:restaurant,
+      user:req.userId,
+      status:"placed",
+      deliveryDetails:checkoutSessionRequest.deliveryDetails,
+      cartItems:checkoutSessionRequest.cartItems,
+      createdAt:new Date()
+    })
+
+
     // for stripe page show this information
     const lineItems =  createLineItems(checkoutSessionRequest,restaurant.menuItems);
     // sent data to stripe
-    const session = await createSession(lineItems,"TEST_ORDER_ID",restaurant.deliveryPrice,restaurant._id.toString())
+    const session = await createSession(lineItems,newOrder._id.toString(),restaurant.deliveryPrice,restaurant._id.toString())
 
     if(!session.url){
       return res.status(500).json({message:'Error creating stripe  session'})
     }
+
+    await newOrder.save();
     res.json({url: session.url})
   }catch(error:any){
     console.log(error)

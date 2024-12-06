@@ -80,7 +80,6 @@ export default function DetailPage() {
       }
 
       const data = await createCheckoutSession(checkoutData);
-      console.log("final checkout data",data)
       window.location.href=data.url;
   }
 
