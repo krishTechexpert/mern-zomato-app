@@ -1,3 +1,4 @@
+import React from 'react';
 import { cuisineList } from "@/config/restaurant-options.config";
 import { Label } from "./ui/label";
 import { Check, ChevronDown, ChevronUp } from "lucide-react";

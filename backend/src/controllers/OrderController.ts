@@ -3,9 +3,11 @@ import { Request,Response } from "express";
 import Restaurant, { MenuItemType } from "../models/restaurant";
 import { check } from "express-validator";
 import Order from "../models/order";
+import { CONNREFUSED } from "dns";
 
 const STRIPE = new Stripe(process.env.STRIPE_API_KEY as string);
 const FRONTEND_URL = process.env.FRONTEND_URL as string;
+const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
 
 if (!STRIPE) {
   throw new Error("Stripe API key is not defined in the environment variables.");
@@ -25,6 +27,40 @@ type CheckoutSessionRequest = {
   };
   restaurantId: string
 }
+// to test this event open terminal and run
+// stripe trigger checkout.session.completed
+// now goto  terminal inside backend : npm run dev which run both nodemon and stripe concurrently
+// you will see event object with below console lof print also you will get STRIPE_WEBHOOK_SECRET
+const stripewebhookHandler = async (req:Request,res:Response) => {
+  //sample for test
+  // console.log("RECEIVED EVENT")
+  // console.log('================')
+  // console.log('event:',req.body)
+  // res.send()
+  let event;
+  try{
+    const sig = req.headers["stripe-signature"];
+    // Verify the event with the raw body and signature
+    event=STRIPE.webhooks.constructEvent(req.body,sig as string,STRIPE_ENDPOINT_SECRET)
+  }catch(error:any){
+    console.log(error)
+    return res.status(400).send(`Webhook error: ${error.message}`)
+  }
+
+  if(event.type === "checkout.session.completed") {
+    const order = await Order.findById(event.data.object.metadata?.orderId);
+
+    if(!order) {
+      return res.status(400).json({message:'Order not found'})
+    }
+    console.log(event.data.object)
+    order.totalAmount= event.data.object.amount_total;
+    order.status = "paid";
+    await order.save();
+  }
+  res.status(200).send()
+}
+
 
 const createCheckoutSession = async (req:Request,res:Response) => {
   try{
@@ -74,6 +110,11 @@ const createLineItems = (checkoutSessionRequest:CheckoutSessionRequest,menuItems
       if(!menuItem){
         throw new Error(`Menu Item not found: ${cartItem.menuItemId}`)
       }
+        // Check if the amount is valid (in the smallest currency unit, e.g., paise for INR)
+      if (menuItem.price < 50) {
+        throw new Error(`The minimum amount for a purchase is ₹50.`)
+      }
+
       // this is pre defined object in stripe we have to used these propeties for stripe
       const line_item:Stripe.Checkout.SessionCreateParams.LineItem ={
         price_data:{
@@ -116,5 +157,6 @@ const createSession = async (lineItems:Stripe.Checkout.SessionCreateParams.LineI
 }
 
 export default {
-  createCheckoutSession
+  createCheckoutSession,
+  stripewebhookHandler
 }

@@ -22,10 +22,24 @@ const corsOpts = {
   ],
 };
 const app = express();
-app.use(express.json());
 app.use(cors({
   origin: '*',
 }));
+
+//express.raw() ensures the request body is unmodified for signature verification.
+//It’s specific to webhooks (like Stripe) where the raw payload is required.
+
+//Stripe includes a signature header (Stripe-Signature) with its webhook requests.
+//To verify this signature, the raw body of the request is required
+
+//express.raw() tells Express to parse the request body as raw binary data (a Buffer) instead of converting it to a JavaScript object.
+
+//The { type: "*/*" } option allows this middleware to handle all content types (application/json, application/x-www-form-urlencoded, etc.).
+
+
+app.use("/api/order/checkout/webhook",express.raw({type:"*/*"}))
+
+app.use(express.json()); // put after webhook middleware
 
 
 app.use("/api/my/user",myUserRoute)

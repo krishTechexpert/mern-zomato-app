@@ -21,6 +21,7 @@ export type CartItem = {
 export default function DetailPage() {
   const {restaurantId}=useParams();
   const {restaurant,isLoading}=useGetRestaurant(restaurantId);
+  const [minOrderPurchase,setMinOrderPurchase]=useState<number>(50)
   const {createCheckoutSession,isLoading:isCheckoutLoading}=useCreateCheckoutSession();
 
   const [cartItems,setCartItems]=useState<CartItem[]>(() => {
@@ -101,10 +102,11 @@ export default function DetailPage() {
 
           <div>
             <Card>
-              <OrderSummary restaurant={restaurant} cartItems={cartItems} removeFromCart={ removeFromCart} />
+              <OrderSummary restaurant={restaurant} cartItems={cartItems} removeFromCart={ removeFromCart} minOrderPurchase={minOrderPurchase} setMinOrderPurchase = {setMinOrderPurchase} />
               <CardFooter>
-                <CheckoutButton disabled={cartItems.length === 0} isLoading={isCheckoutLoading} onCheckout={onCheckout} />
+                <CheckoutButton disabled={cartItems.length === 0 || minOrderPurchase < 50} isLoading={isCheckoutLoading} onCheckout={onCheckout} />
               </CardFooter>
+              {minOrderPurchase<50 && <span className='text-red-500 text-sm'>The minimum order is required ₹50.</span>}
             </Card>
           </div>
       </div>  

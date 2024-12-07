@@ -1,6 +1,6 @@
 import { CartItem } from '@/pages/DetailPage'
 import { Restaurant } from '@/types'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { CardContent, CardHeader, CardTitle } from './ui/card'
 import { Badge } from './ui/badge'
 import { Separator } from './ui/separator'
@@ -9,20 +9,36 @@ import { Trash } from 'lucide-react'
 type Props = {
   restaurant: Restaurant,
   cartItems:CartItem[],
-  removeFromCart:(cartItem:CartItem) => void
+  removeFromCart:(cartItem:CartItem) => void,
+  minOrderPurchase:number,
+  setMinOrderPurchase:React.Dispatch<React.SetStateAction<number>>
+
 }
-export default function OrderSummary({restaurant,cartItems,removeFromCart}:Props) {
+export default function OrderSummary({restaurant,cartItems,removeFromCart,setMinOrderPurchase,minOrderPurchase}:Props) {
   const getTotalCost = () => {
     const totalPrice = cartItems.reduce((total,item) => total + item.price * item.quantity,0 );
-    const totalWithDelivery = totalPrice + restaurant.deliveryPrice;
-    return (totalWithDelivery/100).toFixed(2);
+    const totalWithDelivery = totalPrice && (totalPrice + restaurant.deliveryPrice)/100;
+    if( minOrderPurchase < 50) {
+      
+      // according to stripe rule,  minimum purchase order should be >50 for india
+      //alert("The minimum amount for a purchase is ₹50.");
+      setMinOrderPurchase(totalWithDelivery)
+    }
+    setMinOrderPurchase(totalWithDelivery)
+    return totalWithDelivery.toFixed(2);
   }
+
+  useEffect(() => {
+    getTotalCost();
+  },[minOrderPurchase,cartItems])
+
   return (
     <>
       <CardHeader>
         <CardTitle className='text-2xl font-bold tracking-tight flex justify-between'>
           <span>Your Order</span>
-          <span>₹{getTotalCost()}</span>
+          <span>₹{minOrderPurchase}
+          </span>
         </CardTitle>
       </CardHeader>
       <CardContent className='flex flex-col gap-5'>
