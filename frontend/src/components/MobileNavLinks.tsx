@@ -7,6 +7,7 @@ export default function MobileNavLinks() {
   const {logout} = useAuth0();
   return (
     <>
+    <Link className='flex bg-white items-center font-bold hover:text-orange-500' to='/order-status'>Order Status</Link>
     <Link to="/manage-restaurant" className='font-bold text-orange-500'>My Restaurant</Link>
     <Link className='flex bg-white items-center font-bold hover:text-orange-500' to='/user-profile'>My profile</Link>
 

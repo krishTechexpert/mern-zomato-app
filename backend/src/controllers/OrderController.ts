@@ -27,6 +27,21 @@ type CheckoutSessionRequest = {
   };
   restaurantId: string
 }
+
+const getMyOrders = async (req:Request,res:Response) => {
+  try{
+    const orders=await Order.find({user:req.userId}).populate("restaurant").populate("user");
+    if(!orders) {
+      return res.status(400).json({message:'Order not found'})
+    }
+    return res.json(orders)
+  }catch(error){
+    console.log(error);
+    res.status(500).json({message:'something went wrong with order'})
+  }
+}
+
+
 // to test this event open terminal and run
 // stripe trigger checkout.session.completed
 // now goto  terminal inside backend : npm run dev which run both nodemon and stripe concurrently
@@ -158,5 +173,6 @@ const createSession = async (lineItems:Stripe.Checkout.SessionCreateParams.LineI
 
 export default {
   createCheckoutSession,
-  stripewebhookHandler
+  stripewebhookHandler,
+  getMyOrders
 }
