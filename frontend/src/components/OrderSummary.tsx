@@ -17,7 +17,7 @@ type Props = {
 export default function OrderSummary({restaurant,cartItems,removeFromCart,setMinOrderPurchase,minOrderPurchase}:Props) {
   const getTotalCost = () => {
     const totalPrice = cartItems.reduce((total,item) => total + item.price * item.quantity,0 );
-    const totalWithDelivery = totalPrice && (totalPrice + restaurant.deliveryPrice)/100;
+    const totalWithDelivery = totalPrice && (totalPrice + restaurant.deliveryPrice);
     if( minOrderPurchase < 50) {
       
       // according to stripe rule,  minimum purchase order should be >50 for india
@@ -25,7 +25,7 @@ export default function OrderSummary({restaurant,cartItems,removeFromCart,setMin
       setMinOrderPurchase(totalWithDelivery)
     }
     setMinOrderPurchase(totalWithDelivery)
-    return totalWithDelivery.toFixed(2);
+    //return totalWithDelivery.toFixed(2);
   }
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function OrderSummary({restaurant,cartItems,removeFromCart,setMin
       <CardHeader>
         <CardTitle className='text-2xl font-bold tracking-tight flex justify-between'>
           <span>Your Order</span>
-          <span>₹{minOrderPurchase}
+          <span>₹{minOrderPurchase.toFixed(2)}
           </span>
         </CardTitle>
       </CardHeader>
@@ -52,14 +52,14 @@ export default function OrderSummary({restaurant,cartItems,removeFromCart,setMin
             </span>
             <span className='flex items-center gap-1'>
               <Trash className='cursor-pointer' color="red" size={20} onClick={() =>removeFromCart(item) }/>
-            ₹{((item.price * item.quantity) / 100).toFixed(2)}
+            ₹{((item.price * item.quantity)).toFixed(2)}
             </span>
           </div>
         ))}
         <Separator />
         <div className='flex justify-between'>
             <span>Delivery</span>
-            <span>₹{(restaurant.deliveryPrice/100).toFixed(2)}</span>
+            <span>₹{(restaurant.deliveryPrice).toFixed(2)}</span>
         </div>
       </CardContent>
     </>

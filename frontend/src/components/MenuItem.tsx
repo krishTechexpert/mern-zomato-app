@@ -14,7 +14,7 @@ export default function MenuItem({menuItem,addToCart}:Props) {
         <CardTitle>{menuItem.name}</CardTitle>
       </CardHeader>
       <CardContent className='font-bold-100'>
-      ₹{(menuItem.price / 100).toFixed(2)}
+      ₹{(menuItem.price).toFixed(2)}
       </CardContent>
     </Card>
   )
