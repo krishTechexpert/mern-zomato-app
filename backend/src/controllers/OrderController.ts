@@ -8,7 +8,7 @@
   const FRONTEND_URL = process.env.FRONTEND_URL as string;
   const STRIPE_ENDPOINT_SECRET = process.env.STRIPE_WEBHOOK_SECRET as string;
 
-  // Minimum amount constants
+  // Minimum amount for each menu item, otherwise ₹50 sy kam menu item per error aygi or order nhi placed hoga.. 
   const MINIMUM_AMOUNT_INR = 5000; // ₹50 in paise (smallest currency unit for INR)
 
 
@@ -134,7 +134,6 @@
       // Ensure the amount is in paise (smallest currency unit for INR) in stripe rule
       const unitAmountInPaise = menuItem.price * 100; 
       //such as 120 rs convert into paisa 120 * 100 = 12000 paise
-
     // Check if the amount is valid (in the smallest currency unit)
     if (unitAmountInPaise < MINIMUM_AMOUNT_INR) {
       throw new Error(`The minimum amount for a purchase is ₹${MINIMUM_AMOUNT_INR / 100}.`);

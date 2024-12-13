@@ -16,6 +16,8 @@ const upload = multer({
 
 router.get('/order',jwtCheck,jwtParse,MyRestaurantController.getMyRestaurantOrder)
 
+router.patch('/order/:orderId/status',jwtCheck,jwtParse,MyRestaurantController.updateOrderStatus)
+
 // req.file is the `imageFile` file
 
 //GET:  /api/my/restaurant
